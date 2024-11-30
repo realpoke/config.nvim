@@ -15,7 +15,7 @@ mkdir -p ~/.config/nvim
 2. **Clone this repository** into the `nvim` directory:
 
 ```bash
-git clone https://github.com/realpoke/config.nvim.git ~/.config/nvim
+git clone git@github.com/realpoke/config.nvim.git ~/.config/nvim
 ```
 
 3. **Done!** Everything should be installing on first boot.
