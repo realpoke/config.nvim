@@ -11,6 +11,7 @@ return {
 		require("neo-tree").setup({
 			window = {
 				position = "right",
+				width = 80,
 			},
 		})
 		vim.keymap.set("n", "<Leader><C-e>", ":Neotree toggle<CR>")
