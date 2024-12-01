@@ -27,6 +27,6 @@ require("lazy").setup({
 		notify = false,
 	},
 	install = {
-		colorscheme = { "nord" },
+		colorscheme = { "nordic" },
 	},
 })
