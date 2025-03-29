@@ -47,6 +47,19 @@ vim.keymap.set("n", "<C-q>", ":bd<CR>", { desc = "Close current buffer and switc
 vim.keymap.set("n", "<C-l>", ":bn<CR>", { desc = "Go to the next buffer [<C-l>]" })
 vim.keymap.set("n", "<C-h>", ":bp<CR>", { desc = "Go to the previous buffer [<C-h>]" })
 
+vim.keymap.set("n", "<leader>tn", function()
+	require("neotest").run.run()
+end, { desc = "[T]est [N]earest" })
+vim.keymap.set("n", "<leader>tf", function()
+	require("neotest").run.run(vim.fn.expand("%"))
+end, { desc = "[T]est [F]ile" })
+vim.keymap.set("n", "<leader>ts", function()
+	require("neotest").run.run({ suite = true })
+end, { desc = "[T]est [S]uite" })
+vim.keymap.set("n", "<leader>to", function()
+	require("neotest").output.open()
+end, { desc = "[T]oggle test [O]utput" })
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -327,6 +340,24 @@ require("lazy").setup({
 		},
 		{
 			"onsails/lspkind.nvim",
+		},
+		{
+			"nvim-neotest/neotest",
+			dependencies = {
+				"nvim-neotest/nvim-nio",
+				"nvim-lua/plenary.nvim",
+				"antoinemadec/FixCursorHold.nvim",
+				"nvim-treesitter/nvim-treesitter",
+				"V13Axel/neotest-pest",
+			},
+			config = function()
+				---@diagnostic disable-next-line: missing-fields
+				require("neotest").setup({
+					adapters = {
+						require("neotest-pest"),
+					},
+				})
+			end,
 		},
 		{
 			"kdheepak/lazygit.nvim",
