@@ -303,7 +303,6 @@ require("lazy").setup({
 						{ name = "nvim_lsp" },
 						{ name = "luasnip" },
 						{ name = "path" },
-						{ name = "supermaven" },
 					},
 					formatting = {
 						format = function(entry, vim_item)
@@ -316,9 +315,6 @@ require("lazy").setup({
 								},
 								ellipsis_char = "...",
 								show_labelDetails = false,
-								symbol_map = {
-									Supermaven = "",
-								},
 							})(entry, vim_item)
 
 							return vim_item
@@ -352,16 +348,6 @@ require("lazy").setup({
 					desc = "Open Lazy[GIT]",
 				},
 			},
-		},
-		{
-			"supermaven-inc/supermaven-nvim",
-			config = function()
-				require("supermaven-nvim").setup({
-					log_level = "off",
-					disable_inline_completion = true,
-					disable_keymaps = true,
-				})
-			end,
 		},
 		{
 			"echasnovski/mini.cursorword",
