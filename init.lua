@@ -207,7 +207,8 @@ require("lazy").setup({
 
 				require("mason-lspconfig").setup({
 					ensure_installed = { "lua_ls" },
-					automatic_installation = false,
+					automatic_installation = true,
+					automatic_enable = true,
 					handlers = {
 						function(server_name)
 							local server = servers[server_name] or {}
