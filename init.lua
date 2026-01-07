@@ -14,11 +14,11 @@ vim.opt.colorcolumn = "80,120"
 
 vim.opt.cursorline = true
 
+vim.opt.signcolumn = "yes:1"
+
 vim.opt.scrolloff = 8
 
 vim.opt.confirm = true
-vim.opt.autocomplete = true
-vim.opt.completeopt = "menu,menuone,fuzzy,noinsert"
 
 vim.g.mapleader = " "
 
@@ -46,17 +46,21 @@ vim.api.nvim_create_autocmd("PackChanged", {
 	end,
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-	callback = function(args)
-		vim.opt.signcolumn = "yes:1"
-		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-		if client:supports_method("textDocument/completion") then
-			vim.opt.complete = "o,.,w,b,u"
-			vim.opt.completeopt = "menu,menuone,popup,noinsert"
-			vim.lsp.completion.enable(true, client.id, args.buf)
-		end
+vim.api.nvim_create_autocmd("InsertEnter", {
+	pattern = "*",
+	group = vim.api.nvim_create_augroup("BlinkCmpLazyLoad", { clear = true }),
+	once = true,
+	callback = function()
+		require("blink.cmp").setup({
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+			},
+			fuzzy = { implementation = "lua" },
+		})
 	end,
 })
+
+vim.keymap.set("n", "<leader>pu", "<cmd>lua vim.pack.update()<CR>")
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
@@ -94,8 +98,20 @@ require("mini.notify").setup()
 require("mini.snippets").setup()
 require("mini.pick").setup()
 require("mini.extra").setup()
+require("mini.trailspace").setup()
+local hipatterns = require("mini.hipatterns")
+hipatterns.setup({
+	highlighters = {
+		fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+		hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+		todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+		note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+	},
+	hex_color = hipatterns.gen_highlighter.hex_color(),
+})
 vim.keymap.set("n", "<leader>sr", ":Pick resume<CR>", { desc = "[S]earch [R]esume" })
 vim.keymap.set("n", "<leader>sf", ":Pick files<CR>", { desc = "[S]earch [F]iles" })
+vim.keymap.set("n", "<leader>sl", ":Pick grep_live<CR>", { desc = "[S]earch by Grep [L]ive" })
 vim.keymap.set("n", "<leader>sg", ":Pick git_files<CR>", { desc = "[S]earch [G]it files" })
 vim.keymap.set("n", "<leader>sh", ":Pick help<CR>", { desc = "[S]earch [H]elp" })
 vim.keymap.set("n", "<leader>sd", ":Pick diagnostic<CR>", { desc = "[S]earch [D]iagnostic" })
@@ -119,8 +135,12 @@ hooks["nvim-treesitter"] = function()
 	vim.notify("Treesitter: Updated...")
 end
 vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter" })
-require("nvim-treesitter").install({
+require("nvim-treesitter").setup({
 	ensure_installed = { "json", "lua", "vim", "php", "blade" },
+	auto_install = true,
+	highlight = {
+		enable = true,
+	},
 })
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
@@ -171,4 +191,4 @@ require("conform").setup({
 vim.pack.add({ "https://github.com/folke/lazydev.nvim" })
 require("lazydev").setup()
 
-vim.lsp.enable({ "lua_ls", "intelephense", "laravel_ls", "stylua", "tailwindcss" })
+vim.pack.add({ { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("^1") } })
