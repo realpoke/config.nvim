@@ -16,6 +16,7 @@ Before installing, ensure your Linux system has the following software installed
 - `tree-sitter-cli` (for syntax parsing)
 - `node` (Required, but I use `bun` to fulfill this)
 - `npm` (Required, but I use `bun` to fulfill this)
+- `rustup` (for building fuzzy finding)
 
 ### The Node/NPM -> Bun Alias
 
