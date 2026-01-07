@@ -51,11 +51,18 @@ vim.api.nvim_create_autocmd("InsertEnter", {
 	group = vim.api.nvim_create_augroup("BlinkCmpLazyLoad", { clear = true }),
 	once = true,
 	callback = function()
+		local fuzzy_implementation = "prefer_rust_with_warning"
+		if 0 ~= vim.system({ "rustc", "+nightly", "--version" }):wait().code then
+			vim.notify(
+				"blink.cmp: could not find ruest fuzzy finder, falling back to lua. Make sure 'rustup' is installed."
+			)
+			fuzzy_implementation = "lua"
+		end
 		require("blink.cmp").setup({
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
 			},
-			fuzzy = { implementation = "lua" },
+			fuzzy = { implementation = fuzzy_implementation },
 		})
 	end,
 })
@@ -191,4 +198,9 @@ require("conform").setup({
 vim.pack.add({ "https://github.com/folke/lazydev.nvim" })
 require("lazydev").setup()
 
+hooks["blink.cmp"] = function(ev)
+	vim.notify("blink.cmp: Building...")
+	vim.system({ "cargo", "build", "--release" }, { cwd = ev.data.path .. "/crates/fuzzy" })
+	vim.notify("blink.cmp: Build complete...")
+end
 vim.pack.add({ { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("^1") } })
