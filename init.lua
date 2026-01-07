@@ -199,8 +199,13 @@ vim.pack.add({ "https://github.com/folke/lazydev.nvim" })
 require("lazydev").setup()
 
 hooks["blink.cmp"] = function(ev)
-	vim.notify("blink.cmp: Building...")
-	vim.system({ "cargo", "build", "--release" }, { cwd = ev.data.path .. "/crates/fuzzy" })
-	vim.notify("blink.cmp: Build complete...")
+	local res = vim.system({ "cargo", "build", "--release" }, {
+		cwd = ev.path .. "/lua/blink/cmp/fuzzy/rust",
+	}):wait()
+	if res.code == 0 then
+		vim.notify("blink.cmp: Build complete...")
+	else
+		vim.notify("blink.cmp: Build failed...\n" .. (res.stderr or ""), vim.log.levels.ERROR)
+	end
 end
 vim.pack.add({ { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("^1") } })
