@@ -22,6 +22,12 @@ vim.opt.completeopt = "menu,menuone,fuzzy,noinsert"
 
 vim.g.mapleader = " "
 
+vim.filetype.add({
+	pattern = {
+		[".*%.blade%.php"] = "blade",
+	},
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.hl.on_yank()
@@ -49,13 +55,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.opt.completeopt = "menu,menuone,popup,noinsert"
 			vim.lsp.completion.enable(true, client.id, args.buf)
 		end
-		if client:supports_method("textDocument/formatting", 0) then
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				callback = function()
-					vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
-				end,
-			})
-		end
 	end,
 })
 
@@ -69,7 +68,9 @@ vim.keymap.set("i", "<CR>", function()
 	end
 end, { expr = true, replace_keycodes = true })
 
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "[F]ormat buffer" })
+vim.keymap.set("n", "<leader>f", function()
+	require("conform").format({ async = true, lsp_format = "fallback" })
+end, { desc = "[F]ormat buffer" })
 
 vim.keymap.set("n", "<C-b>", "<C-b>zz")
 vim.keymap.set("n", "<C-f>", "<C-f>zz")
@@ -148,6 +149,23 @@ require("mason-tool-installer").setup({
 		"prettierd",
 	},
 	auto_update = true,
+})
+
+vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
+require("conform").setup({
+	formatters_by_ft = {
+		lua = { "stylua" },
+		php = { "pint" },
+		blade = { "blade-formatter" },
+		javascript = { "prettierd" },
+		html = { "prettierd" },
+		css = { "prettierd" },
+		json = { "prettierd" },
+	},
+	format_on_save = {
+		timeout_ms = 500,
+		lsp_format = "fallback",
+	},
 })
 
 vim.pack.add({ "https://github.com/folke/lazydev.nvim" })

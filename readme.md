@@ -14,13 +14,19 @@ Before installing, ensure your Linux system has the following software installed
 - `composer` (for PHP dependencies)
 - `lazygit` (for git management)
 - `tree-sitter-cli` (for syntax parsing)
+- `node` (Required, but I use `bun` to fulfill this)
 - `npm` (Required, but I use `bun` to fulfill this)
 
-### The NPM -> Bun Alias
+### The Node/NPM -> Bun Alias
 
-This configuration expects `npm` to be available on the path. I prefer to use **Bun** to handle this. You must alias `npm` to `bun` on your system for language servers to install correctly.
+This configuration expects `node` and `npm` to be available on the path. I prefer to use **Bun** to handle this. You must alias `node` and `npm` to `bun` on your system for language servers to install correctly.
 
 Run this command to create the necessary symlink (Reference: [Gist](https://gist.github.com/realpoke/2610a0fb43916aa04559b0df30bfc3f2)):
+
+```bash
+sudo ln -s "$(which bun)" /usr/local/bin/node
+
+```
 
 ```bash
 sudo ln -s "$(which bun)" /usr/local/bin/npm
