@@ -189,6 +189,7 @@ require("conform").setup({
 		html = { "prettierd" },
 		css = { "prettierd" },
 		json = { "prettierd" },
+		yaml = { "prettierd" },
 	},
 	format_on_save = {
 		timeout_ms = 500,
