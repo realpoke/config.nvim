@@ -41,12 +41,7 @@ git clone git@github.com:realpoke/config.nvim.git ~/.config/nvim
 
 ```
 
-2. **First Boot**:
-Launch Neovim. The package manager will automatically bootstrap and install plugins.
-```bash
-nvim
-
-```
+2. **Done!** Everything should be installing on first boot.
 
 ---
 
