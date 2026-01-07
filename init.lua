@@ -20,6 +20,8 @@ vim.opt.scrolloff = 8
 
 vim.opt.confirm = true
 
+vim.opt.showmode = false
+
 vim.g.mapleader = " "
 
 vim.filetype.add({
@@ -60,7 +62,14 @@ vim.api.nvim_create_autocmd("InsertEnter", {
 		end
 		require("blink.cmp").setup({
 			sources = {
-				default = { "lsp", "path", "snippets", "buffer" },
+				default = { "supermaven", "lsp", "path", "snippets", "buffer" },
+				providers = {
+					supermaven = {
+						name = "supermaven",
+						module = "blink-cmp-supermaven",
+						async = true,
+					},
+				},
 			},
 			fuzzy = { implementation = fuzzy_implementation },
 		})
@@ -208,4 +217,17 @@ hooks["blink.cmp"] = function(ev)
 		vim.notify("blink.cmp: Build failed...\n" .. (res.stderr or ""), vim.log.levels.ERROR)
 	end
 end
-vim.pack.add({ { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("^1") } })
+vim.pack.add({
+	"https://github.com/Saghen/blink.cmp",
+	"https://github.com/Huijiro/blink-cmp-supermaven",
+})
+
+package.loaded["cmp"] = {
+	register_source = function() end,
+}
+vim.pack.add({ "https://github.com/supermaven-inc/supermaven-nvim" })
+require("supermaven-nvim").setup({
+	log_level = "off",
+	disable_inline_completion = true,
+	disable_keymaps = true,
+})
