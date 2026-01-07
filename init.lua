@@ -80,14 +80,6 @@ vim.keymap.set("n", "<leader>pu", "<cmd>lua vim.pack.update()<CR>")
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
-vim.keymap.set("i", "<CR>", function()
-	if vim.fn.pumvisible() ~= 0 then
-		return "<C-e><CR>"
-	else
-		return "<CR>"
-	end
-end, { expr = true, replace_keycodes = true })
-
 vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ async = true, lsp_format = "fallback" })
 end, { desc = "[F]ormat buffer" })
